@@ -2294,17 +2294,17 @@ void NSPanelLovelace::call_ha_service_(
   #endif
 
   for (auto &it : data) {
-    api::HomeassistantServiceMap kv;
-    kv.set_key(esphome::StringRef(it.first));
-    kv.value = it.second;
-    resp.data.push_back(kv);
+      api::HomeassistantServiceMap kv;
+      kv.set_key(esphome::StringRef(it.first));
+      kv.value = it.second;
+      resp.data.push_back(kv);
 
-    #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,11,0)
-      api::HomeassistantServiceMap kv_var;
-      kv_var.set_key(esphome::StringRef(it.first));
-      kv_var.value = it.second;
-      resp.variables.push_back(kv_var);
-    #endif
+      #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,11,0)
+        api::HomeassistantServiceMap kv_var;
+        kv_var.set_key(esphome::StringRef(it.first));
+        kv_var.value = it.second;
+        resp.variables.push_back(kv_var);
+      #endif
   }
 
   for (auto &it : data_template) {
