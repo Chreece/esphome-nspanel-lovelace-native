@@ -2259,6 +2259,16 @@ void NSPanelLovelace::call_ha_service_(
 }
 
 void NSPanelLovelace::call_ha_service_(
+    const char *entity_type, const std::string &action,
+    const std::map<std::string, std::string> &data,
+    const std::map<std::string, std::string> &data_template) {
+  if (!entity_type) return;
+  this->call_ha_service_(
+    std::string(entity_type).append(1, '.').append(action),
+    data, data_template);
+}
+
+void NSPanelLovelace::call_ha_service_(
     const std::string &service,
     const std::map<std::string, std::string> &data,
     const std::map<std::string, std::string> &data_template) {
