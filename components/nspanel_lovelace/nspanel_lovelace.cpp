@@ -2295,30 +2295,31 @@ void NSPanelLovelace::call_ha_service_(
 
   for (auto &it : data) {
     api::HomeassistantServiceMap kv;
-    #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,8,0)
-      kv.set_key(esphome::StringRef(it.first));
-    #else
-      kv.key = it.first;
-    #endif
+    kv.set_key(esphome::StringRef(it.first));
     kv.value = it.second;
     resp.data.push_back(kv);
+
+    #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,11,0)
+      api::HomeassistantServiceMap kv_var;
+      kv_var.set_key(esphome::StringRef(it.first));
+      kv_var.value = it.second;
+      resp.variables.push_back(kv_var);
+    #endif
   }
 
   for (auto &it : data_template) {
-    api::HomeassistantServiceMap kv;
-    #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,8,0)
+      api::HomeassistantServiceMap kv;
       kv.set_key(esphome::StringRef(it.first));
-    #else
-      kv.key = it.first;
-    #endif
-    kv.value = it.second;
-    resp.data_template.push_back(kv);
-  }
+      kv.value = it.second;
+      resp.data_template.push_back(kv);
 
-  #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,11,0)
-    for (auto &kv : resp.data)
-      resp.variables.push_back(kv);
-  #endif
+      #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,11,0)
+        api::HomeassistantServiceMap kv_var;
+        kv_var.set_key(esphome::StringRef(it.first));
+        kv_var.value = it.second;
+        resp.variables.push_back(kv_var);
+      #endif
+  }
 
   #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,10,0)
     api::global_api_server->send_homeassistant_action(resp);
