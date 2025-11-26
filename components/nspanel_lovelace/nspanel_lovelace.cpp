@@ -2250,22 +2250,31 @@ Entity* NSPanelLovelace::get_entity_(const std::string &entity_id) {
 
 void NSPanelLovelace::call_ha_service_(
     const std::string &service, const std::string &entity_id) {
-  this->call_ha_service_(service, {{to_string(ha_attr_type::entity_id), entity_id}});
+  this->call_ha_service_(
+      service,
+      {{to_string(ha_attr_type::entity_id), entity_id}},
+      {});
 }
 
 void NSPanelLovelace::call_ha_service_(
     const char *entity_type, const std::string &action, const std::string &entity_id) {
-  this->call_ha_service_(entity_type, action, {{to_string(ha_attr_type::entity_id), entity_id}});
+  this->call_ha_service_(
+      entity_type, action, entity_id, {}, {});
 }
 
 void NSPanelLovelace::call_ha_service_(
-    const char *entity_type, const std::string &action,
+    const char *entity_type, const std::string &action, const std::string &entity_id,
     const std::map<std::string, std::string> &data,
     const std::map<std::string, std::string> &data_template) {
+
   if (!entity_type) return;
+
+  std::map<std::string, std::string> merged_data = data;
+  merged_data[to_string(ha_attr_type::entity_id)] = entity_id;
+
   this->call_ha_service_(
-    std::string(entity_type).append(1, '.').append(action),
-    data, data_template);
+      std::string(entity_type).append(1, '.').append(action),
+      merged_data, data_template);
 }
 
 void NSPanelLovelace::call_ha_service_(
