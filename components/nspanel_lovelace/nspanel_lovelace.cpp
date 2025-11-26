@@ -2277,10 +2277,10 @@ void NSPanelLovelace::call_ha_service_(
 
   #if ESPHOME_LOG_LEVEL >= ESPHOME_LOG_LEVEL_DEBUG
     auto it = data.find(to_string(ha_attr_type::entity_id));
-    if (it != data.end())
+    if (it == data.end())
       ESP_LOGD(TAG, "Call HA: %s -> %s", service.c_str(), it->second.c_str());
     else
-      ESP_LOGD(TAG, "Call HA: %s (no entity_id)", service.c_str());
+      ESP_LOGD(TAG, "Call HA: %s", service.c_str());
   #endif
 
   for (auto &it : data) {
@@ -2306,7 +2306,8 @@ void NSPanelLovelace::call_ha_service_(
   }
 
   #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,11,0)
-    resp.variables = resp.data;
+    for (auto &kv : resp.data)
+      resp.variables.push_back(kv);
   #endif
 
   #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,10,0)
