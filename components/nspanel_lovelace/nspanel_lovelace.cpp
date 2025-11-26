@@ -2250,16 +2250,12 @@ Entity* NSPanelLovelace::get_entity_(const std::string &entity_id) {
 
 void NSPanelLovelace::call_ha_service_(
     const std::string &service, const std::string &entity_id) {
-  this->call_ha_service_(
-      service,
-      {{to_string(ha_attr_type::entity_id), entity_id}},
-      {});
+  this->call_ha_service_(service, {{to_string(ha_attr_type::entity_id), entity_id}});
 }
 
 void NSPanelLovelace::call_ha_service_(
     const char *entity_type, const std::string &action, const std::string &entity_id) {
-  this->call_ha_service_(
-      entity_type, action, entity_id, {}, {});
+  this->call_ha_service_(entity_type, action, {{to_string(ha_attr_type::entity_id), entity_id}});
 }
 
 void NSPanelLovelace::call_ha_service_(
