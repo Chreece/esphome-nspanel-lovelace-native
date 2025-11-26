@@ -2295,32 +2295,44 @@ void NSPanelLovelace::call_ha_service_(
 
 #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,11,0)
 
-  // 2025.11 introduces add_data() / add_data_template()
-  for (auto &it : data)
-    resp.add_data(it.first, it.second);
-
-  for (auto &it : data_template)
-    resp.add_data_template(it.first, it.second);
-
-#else
   for (auto &it : data) {
     api::HomeassistantServiceMap kv;
-  #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,8,0)
     kv.set_key(esphome::StringRef(it.first));
-  #else
-    kv.key = it.first;
-  #endif
     kv.value = it.second;
     resp.data.push_back(kv);
   }
 
   for (auto &it : data_template) {
     api::HomeassistantServiceMap kv;
+    kv.set_key(esphome::StringRef(it.first));
+    kv.value = it.second;
+    resp.data_template.push_back(kv);
+  }
+
+#else
+
+  for (auto &it : data) {
+    api::HomeassistantServiceMap kv;
+
   #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,8,0)
     kv.set_key(esphome::StringRef(it.first));
   #else
     kv.key = it.first;
   #endif
+
+    kv.value = it.second;
+    resp.data.push_back(kv);
+  }
+
+  for (auto &it : data_template) {
+    api::HomeassistantServiceMap kv;
+
+  #if ESPHOME_VERSION_CODE >= VERSION_CODE(2025,8,0)
+    kv.set_key(esphome::StringRef(it.first));
+  #else
+    kv.key = it.first;
+  #endif
+
     kv.value = it.second;
     resp.data_template.push_back(kv);
   }
